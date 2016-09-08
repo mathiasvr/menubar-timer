@@ -1,0 +1,82 @@
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- use local icons, or just replace material -->
+  <!--link rel="stylesheet" href="https://code.getmdl.io/1.2.0/material.indigo-pink.min.css"-->
+  <link rel="stylesheet" href="./mdl/material.min.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,400italic,500,500italic,700,700italic">
+  <script defer src="./mdl/material.min.js"></script>
+  <!--script defer src="https://code.getmdl.io/1.2.0/material.min.js"></script-->
+  <script defer src="app.js"></script>
+</head>
+<body>
+<div class="mdl-layout mdl-js-layout">
+<main class="mdl-layout__content mdl-typography--font-light">
+<div class="mdl-grid">
+  
+  <!--div class="mdl-cell">
+    <!-- Mini FAB button -- >
+    <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab" id="start-button">
+      <i class="material-icons">play_arrow</i>
+    </button>
+    <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored" id="stop-button">
+      <i class="material-icons">stop</i>
+    </button>
+    <button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
+      <i class="material-icons">pause</i>
+    </button>
+  </div-->
+
+  <div class="mdl-cell">
+    <button class="mdl-button mdl-js-button mdl-button--raised" id="start-button">
+      <i class="material-icons">play_arrow</i>
+    </button>
+    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="stop-button">
+      <i class="material-icons">stop</i>
+    </button>
+  </div>
+
+  <div class="mdl-cell">
+    <button class="mdl-button mdl-js-button mdl-button--icon">
+      <i class="material-icons">keyboard_arrow_up</i>
+    </button>
+    <button class="mdl-button mdl-js-button mdl-button--icon">
+      <i class="material-icons">keyboard_arrow_up</i>
+    </button>
+    <button class="mdl-button mdl-js-button mdl-button--icon">
+      <i class="material-icons">keyboard_arrow_up</i>
+    </button>
+    
+    <br>
+
+    <div class="mdl-textfield mdl-js-textfield">
+      <input class="mdl-textfield__input" id="time-textfield" type="text" value="00:10:00">
+      <label class="mdl-textfield__label" for="time-textfield">Text...</label> <!--todo: remove?-->
+    </div>
+
+    <br>
+
+    <button class="mdl-button mdl-js-button mdl-button--icon">
+      <i class="material-icons">keyboard_arrow_down</i>
+    </button>
+    <button class="mdl-button mdl-js-button mdl-button--icon">
+      <i class="material-icons">keyboard_arrow_down</i>
+    </button>
+    <button class="mdl-button mdl-js-button mdl-button--icon">
+      <i class="material-icons">keyboard_arrow_down</i>
+    </button>
+  </div>
+
+  <div class="mdl-cell">
+    <label class="mdl-switch mdl-js-switch" for="timer-switch">
+      <input type="checkbox" id="timer-switch" class="mdl-switch__input" checked>
+      <span class="mdl-switch__label">Show Timer</span>
+    </label>
+  </div>
+
+</div>
+</main>
+</div>
+</body>
+</html>
