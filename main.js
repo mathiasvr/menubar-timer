@@ -1,4 +1,5 @@
 const {ipcMain, nativeImage, Menu} = require('electron')
+const path = require('path')
 const menubar = require('menubar')
 
 ipcMain.on('set-icon', (event, buffer) => {
@@ -19,7 +20,7 @@ ipcMain.on('set-title', (event, title) => {
 
 const mb = menubar({
   tooltip: 'Countdown Timer ' + require('./package').version,
-  icon: 'icons/IconTemplate.png', // TODO: gen, menubar does not support nativeImage
+  icon: path.join(__dirname, 'icons/IconTemplate.png'), // TODO: gen, menubar does not support nativeImage
   preloadWindow: true,
   width: 164,
   height: 270,
