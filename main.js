@@ -1,4 +1,4 @@
-const {ipcMain, nativeImage} = require('electron')
+const {ipcMain, nativeImage, Menu} = require('electron')
 const menubar = require('menubar')
 
 ipcMain.on('set-icon', (event, buffer) => {
@@ -27,4 +27,17 @@ const mb = menubar({
   webPreferences: { backgroundThrottling: false } // TODO: maybe move timer back to main process -_-
 })
 
-// mb.on('ready', () => {})
+mb.on('ready', () => {
+  const contextMenu = Menu.buildFromTemplate([
+    // { label: 'Start/Stop', click: onStartStop },
+    // { label: 'Pause/Start', click: () => countdown.pause() }, // todo maybe just alt+ start/stop
+    // { label: 'Show Time', type: 'checkbox', checked: true }, // todo false
+    // { label: 'Show Window', click: () => mb.showWindow() },
+    // { type: 'separator' },
+    // { label: 'About', role: 'about' },
+    { label: 'Debug', click: () => mb.window.openDevTools({ mode: 'detach' }) },
+    { label: 'Quit', role: 'quit' }
+  ])
+
+  mb.tray.on('right-click', () => mb.tray.popUpContextMenu(contextMenu))
+})
