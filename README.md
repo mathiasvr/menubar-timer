@@ -7,6 +7,9 @@
 
 Countdown Timer Electron App
 
+## todo: screenshot
+
+
 ## license
 
 MIT

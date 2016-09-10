@@ -6,6 +6,21 @@
   <link rel="stylesheet" href="./mdl/material.min.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,400italic,500,500italic,700,700italic">
+  <style>
+    /* TODO: hacks */
+    .mdl-data-table td {
+      padding: 0 1px;
+    }
+    .mdl-data-table td input {
+      text-align: center;
+    }
+    .mdl-data-table td:first-of-type {
+      padding-left: 9px;
+    }
+    .mdl-data-table td:last-of-type {
+      padding-right: 9px;
+    }
+  </style>
   <script defer src="./mdl/material.min.js"></script>
   <!--script defer src="https://code.getmdl.io/1.2.0/material.min.js"></script-->
   <script defer src="app.js"></script>
@@ -32,45 +47,68 @@
     <button class="mdl-button mdl-js-button mdl-button--raised" id="start-button">
       <i class="material-icons">play_arrow</i>
     </button>
-    <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" id="stop-button">
+    <button class="mdl-button mdl-js-button mdl-button--raised" id="stop-button">
       <i class="material-icons">stop</i>
     </button>
   </div>
 
   <div class="mdl-cell">
-    <button class="mdl-button mdl-js-button mdl-button--icon">
-      <i class="material-icons">keyboard_arrow_up</i>
-    </button>
-    <button class="mdl-button mdl-js-button mdl-button--icon">
-      <i class="material-icons">keyboard_arrow_up</i>
-    </button>
-    <button class="mdl-button mdl-js-button mdl-button--icon">
-      <i class="material-icons">keyboard_arrow_up</i>
-    </button>
-    
-    <br>
 
-    <div class="mdl-textfield mdl-js-textfield">
-      <input class="mdl-textfield__input" id="time-textfield" type="text" value="00:10:00">
-      <label class="mdl-textfield__label" for="time-textfield">Text...</label> <!--todo: remove?-->
-    </div>
+    <table class="mdl-data-table mdl-shadow--2dp">
+      <tbody>
+        <tr>
+          <td>
+            <button class="mdl-button mdl-js-button mdl-button--icon" id="inc-hour-button">
+              <i class="material-icons">keyboard_arrow_up</i>
+            </button>
+          </td>
+          <td></td>
+          <td>
+            <button class="mdl-button mdl-js-button mdl-button--icon" id="inc-min-button">
+              <i class="material-icons">keyboard_arrow_up</i>
+            </button>
+          </td>
+          <td></td>
+          <td>
+            <button class="mdl-button mdl-js-button mdl-button--icon" id="inc-sec-button">
+              <i class="material-icons">keyboard_arrow_up</i>
+            </button>
+          </td>
+        </tr>
+        <tr>
+          <td><input class="mdl-textfield__input" type="number" min="0" max="60" value="00" id="hour-textfield"></td>
+          <td>:</td>
+          <td><input class="mdl-textfield__input" type="number" min="0" max="60" value="01" id="min-textfield"></td>
+          <td>:</td>
+          <td><input class="mdl-textfield__input" type="number" min="0" max="60" value="00" id="sec-textfield"></td>
+        </tr>
+        <tr>
+          <td>
+            <button class="mdl-button mdl-js-button mdl-button--icon" id="dec-hour-button">
+              <i class="material-icons">keyboard_arrow_down</i>
+            </button>
+          </td>
+          <td></td>
+          <td>
+            <button class="mdl-button mdl-js-button mdl-button--icon" id="dec-min-button">
+              <i class="material-icons">keyboard_arrow_down</i>
+            </button>
+          </td>
+          <td></td>
+          <td>
+            <button class="mdl-button mdl-js-button mdl-button--icon" id="dec-sec-button">
+              <i class="material-icons">keyboard_arrow_down</i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
 
-    <br>
-
-    <button class="mdl-button mdl-js-button mdl-button--icon">
-      <i class="material-icons">keyboard_arrow_down</i>
-    </button>
-    <button class="mdl-button mdl-js-button mdl-button--icon">
-      <i class="material-icons">keyboard_arrow_down</i>
-    </button>
-    <button class="mdl-button mdl-js-button mdl-button--icon">
-      <i class="material-icons">keyboard_arrow_down</i>
-    </button>
   </div>
 
   <div class="mdl-cell">
     <label class="mdl-switch mdl-js-switch" for="timer-switch">
-      <input type="checkbox" id="timer-switch" class="mdl-switch__input" checked>
+      <input type="checkbox" id="timer-switch" class="mdl-switch__input">
       <span class="mdl-switch__label">Show Timer</span>
     </label>
   </div>

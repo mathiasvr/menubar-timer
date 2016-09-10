@@ -22,7 +22,7 @@ const mb = menubar({
   icon: 'icons/IconTemplate.png', // TODO: gen, menubar does not support nativeImage
   preloadWindow: true,
   width: 164,
-  height: 250,
+  height: 270,
   resizable: false,
   webPreferences: { backgroundThrottling: false } // TODO: maybe move timer back to main process -_-
 })
