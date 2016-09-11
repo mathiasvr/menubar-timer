@@ -2,15 +2,62 @@ const {ipcRenderer} = require('electron')
 const Tock = require('tocktimer') // TODO: replace
 const zero2 = require('zero-fill')(2) // TODO: obsolete this
 
-const $ = require('./lib/dom-query')
 const PieIcon = require('./lib/pie-icon')
+const renderer = require('./renderer')
 
 const drawIcon = PieIcon(document.createElement('canvas'), 36)
+const update = renderer(document.body, dispatch)
 
 // TODO: save?
 let state = {
   timer: 'stopped', // 'running', 'paused'
-  showTime: false
+  showTime: false,
+  // TODO: unify (current duration, set duration)
+  hour: 0,
+  min: 1,
+  sec: 14
+}
+
+// TODO: refactor
+const bound = (val) => val < 0 ? 59 : val % 60
+
+function dispatch (action) {
+  // console.log('action', action)
+
+  if (action === 'play-pause') { // TODO: split?
+    if (state.timer === 'stopped') {
+      let timeString = zero2(state.hour) + ':' + zero2(state.min) + ':' + zero2(state.sec)
+      state.duration = timer.timeToMS(timeString)
+      timer.start(state.duration)
+    } else {
+      timer.pause() // pause / resume
+    }
+    state.timer = state.timer === 'running' ? 'paused' : 'running'
+  } else if (action === 'stop') {
+    state.timer = 'stopped'
+    timer.stop()
+    // TODO: handle in onTimerUpdate
+    drawIcon(0, (err, buffer) => ipcRenderer.send('set-icon', buffer))
+    if (state.showTime) ipcRenderer.send('set-title', '00:00:00')
+  } else if (action === 'toggle-time') {
+    state.showTime = !state.showTime
+    ipcRenderer.send('set-title', '')
+    onTimerUpdate() // TODO: handle properly
+  } else if (action === 'inc-hour') {
+    state.hour = bound(state.hour + 1)
+  } else if (action === 'inc-min') {
+    state.min = bound(state.min + 1)
+  } else if (action === 'inc-sec') {
+    state.sec = bound(state.sec + 1)
+  } else if (action === 'dec-hour') {
+    state.hour = bound(state.hour - 1)
+  } else if (action === 'dec-min') {
+    state.min = bound(state.min - 1)
+  } else if (action === 'dec-sec') {
+    state.sec = bound(state.sec - 1)
+  }
+
+  update(state)
 }
 
 let timer = Tock({
@@ -20,39 +67,7 @@ let timer = Tock({
   complete: onTimerEnd
 })
 
-$('#start-button').on('click', function () {
-  if (state.timer === 'running') {
-    state.timer = 'paused'
-    this.children[0].innerText = 'play_arrow'
-    timer.pause()
-  } else {
-    this.children[0].innerText = 'pause'
-    this.classList.add('mdl-button--colored')
-    if (state.timer === 'paused') {
-      timer.pause() // resume
-    } else { // stopped
-      let timeString = $('#hour-textfield').value + ':' + $('#min-textfield').value + ':' + $('#sec-textfield').value
-      state.duration = timer.timeToMS(timeString)
-      timer.start(state.duration) // restart
-    }
-    state.timer = 'running'
-  }
-})
-
-$('#stop-button').on('click', function () {
-  state.timer = 'stopped'
-  timer.stop()
-  // TODO: state/dom handler
-  $('#start-button').children[0].innerText = 'play_arrow'
-  $('#start-button').classList.remove('mdl-button--colored')
-  if (state.showTime) ipcRenderer.send('set-title', '00:00:00')
-})
-
-$('#timer-switch').on('click', function () {
-  state.showTime = this.checked
-  ipcRenderer.send('set-title', '')
-  onTimerUpdate()
-})
+update(state)
 
 function onTimerUpdate () {
   let ms = timer.lap()
@@ -65,30 +80,13 @@ function onTimerUpdate () {
 }
 
 function onTimerEnd () {
+  dispatch('stop')
   showNotification()
-  drawIcon(0, (err, buffer) => ipcRenderer.send('set-icon', buffer))
 }
 
 function showNotification () {
-  return new window.Notification('Countdown', {
+  return new window.Notification('Countdown Timer', {
     body: 'The timer has run out!'
     // icon: 'icons/...' // TODO
   })
 }
-
-// make value between 00 and 59
-const pz2 = (val) => val < 0 ? 59 : zero2(val % 60)
-
-// TODO: refactor this out of here
-const ht = $('#hour-textfield')
-const mt = $('#min-textfield')
-const st = $('#sec-textfield')
-
-// TODO: hold down for fast increament?
-$('#inc-hour-button').on('click', () => { ht.value = pz2(parseInt(ht.value, 10) + 1) })
-$('#inc-min-button').on('click', () => { mt.value = pz2(parseInt(mt.value, 10) + 1) })
-$('#inc-sec-button').on('click', () => { st.value = pz2(parseInt(st.value, 10) + 1) })
-
-$('#dec-hour-button').on('click', () => { ht.value = pz2(parseInt(ht.value, 10) - 1) })
-$('#dec-min-button').on('click', () => { mt.value = pz2(parseInt(mt.value, 10) - 1) })
-$('#dec-sec-button').on('click', () => { st.value = pz2(parseInt(st.value, 10) - 1) })
