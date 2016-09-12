@@ -2,7 +2,7 @@ const {ipcRenderer} = require('electron')
 const Tock = require('tocktimer') // TODO: replace
 const zero2 = require('zero-fill')(2) // TODO: obsolete this
 
-const PieIcon = require('./lib/pie-icon')
+const PieIcon = require('../lib/pie-icon')
 const renderer = require('./renderer')
 
 const drawIcon = PieIcon(document.createElement('canvas'), 36)
