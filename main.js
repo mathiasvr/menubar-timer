@@ -1,25 +1,26 @@
-const {ipcMain, nativeImage, Menu} = require('electron')
+const electron = require('electron')
 const path = require('path')
 const menubar = require('menubar')
+const {ipcMain, nativeImage, Menu} = electron
 
-ipcMain.on('set-icon', (event, buffer) => {
-  // console.log('set icon:', buffer)
+let scaleFactor = 1
+
+ipcMain.on('set-icon', (_, buffer) => {
   // let pngData = nativeImage.createFromDataURL(data).toPng()
   // let img = nativeImage.createFromBuffer(pngData, 2) //2x, todo: detect scale
 
-  let img = nativeImage.createFromBuffer(buffer, 2) // TODO: detect scale
 
+  let img = nativeImage.createFromBuffer(buffer, scaleFactor)
+  
   img.setTemplateImage(true)
   mb.tray.setImage(img)
 })
 
-ipcMain.on('set-title', (event, title) => {
-  // console.log('set title:', title)
-  mb.tray.setTitle(title)
-})
+ipcMain.on('set-title', (_, title) => mb.tray.setTitle(title))
 
 const mb = menubar({
   tooltip: 'Countdown Timer ' + require('./package').version,
+  dir: 'view',
   icon: path.join(__dirname, 'icons/IconTemplate.png'), // TODO: gen, menubar does not support nativeImage
   preloadWindow: true,
   width: 164,
@@ -36,9 +37,11 @@ mb.on('ready', () => {
     // { label: 'Show Window', click: () => mb.showWindow() },
     // { type: 'separator' },
     // { label: 'About', role: 'about' },
-    { label: 'Debug', click: () => mb.window.openDevTools({ mode: 'detach' }) },
+    { label: 'Debug', click: () => mb.window.openDevTools({ mode: 'undocked' })/*, accelerator: 'Alt+Command+I' */},
     { label: 'Quit', role: 'quit' }
   ])
 
+  scaleFactor = electron.screen.getPrimaryDisplay().scaleFactor
+  
   mb.tray.on('right-click', () => mb.tray.popUpContextMenu(contextMenu))
 })
