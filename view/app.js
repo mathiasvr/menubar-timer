@@ -13,9 +13,10 @@ let state = {
   timer: 'stopped', // 'running', 'paused'
   showTime: false,
   // TODO: unify (current duration, set duration)
-  hour: 0,
+  hour: 0, // time left
   min: 1,
-  sec: 14
+  sec: 14,
+  duration: null, // start duration.
 }
 
 // TODO: refactor
@@ -70,6 +71,7 @@ let timer = Tock({
 update(state)
 
 function onTimerUpdate () {
+  // TODO update view with unified time so far
   let ms = timer.lap()
   let percent = 1 - ms / state.duration
   let timeString = timer.msToTimecode(ms)
