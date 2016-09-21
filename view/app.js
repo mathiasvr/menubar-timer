@@ -34,6 +34,7 @@ function dispatch (action) {
     // TODO: handle in onTimerUpdate
     drawIcon(0, (err, buffer) => ipcRenderer.send('set-icon', buffer))
     if (state.showTime) ipcRenderer.send('set-title', '00:00:00')
+    ipcRenderer.send('set-tooltip', null)
   } else if (action === 'toggle-time') {
     state.showTime = !state.showTime
     ipcRenderer.send('set-title', '')
@@ -77,6 +78,7 @@ function onTimerUpdate () {
   let timeString = timer.msToTimecode(state.ms)
 
   if (state.showTime) ipcRenderer.send('set-title', timeString)
+  ipcRenderer.send('set-tooltip', timeString)
 
   drawIcon(percent, (err, buffer) => ipcRenderer.send('set-icon', buffer))
 }
