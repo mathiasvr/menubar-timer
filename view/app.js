@@ -13,7 +13,8 @@ let state = {
   showTime: false,
   duration: 601, // start duration in seconds.
   runningDuration: null, // TODO
-  toTimeString: (ms) => timer.msToTimecode(ms) // TODO: hack
+  toTimeString: (ms) => timer.msToTimecode(ms), // TODO: hack
+  ms: 0 // current ms
 }
 
 function dispatch (action) {
@@ -51,6 +52,8 @@ function dispatch (action) {
     state.duration -= 60
   } else if (action === 'dec-sec') {
     state.duration -= 1
+  } else if (action === 'update-time') {
+    state.ms = timer.lap()
   }
 
   if (state.duration < 0) state.duration = 0
@@ -60,7 +63,7 @@ function dispatch (action) {
 
 let timer = Tock({
   countdown: true,
-  interval: 200, // TODO: adjust to duration / limit icon gen
+  interval: 500, // TODO: adjust to duration / limit icon gen
   callback: onTimerUpdate,
   complete: onTimerEnd
 })
@@ -68,10 +71,10 @@ let timer = Tock({
 update(state)
 
 function onTimerUpdate () {
-  // TODO update view with unified time so far
-  let ms = timer.lap()
-  let percent = 1 - ms / (state.runningDuration * 1000)
-  let timeString = timer.msToTimecode(ms)
+  // state.ms = timer.lap()
+  dispatch('update-time')
+  let percent = 1 - state.ms / (state.runningDuration * 1000)
+  let timeString = timer.msToTimecode(state.ms)
 
   if (state.showTime) ipcRenderer.send('set-title', timeString)
 
