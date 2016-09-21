@@ -1,5 +1,4 @@
 const yo = require('yo-yo')
-const zero2 = require('zero-fill')(2)
 // TODO: mdl does not work well with morphdom, replace it.
 
 module.exports = function (element, dispatch) {
@@ -22,14 +21,16 @@ module.exports = function (element, dispatch) {
               ${button('raised', playIcon, 'play-pause', state.timer !== 'stopped')}
               ${button('raised', 'stop', 'stop')}
             </div>
-            <div class="mdl-cell">${timerTable(state.hour, state.min, state.sec)}</div>
+            <div class="mdl-cell">${timerTable(state.duration * 1000, state)}</div>
             <div class="mdl-cell">${option('Show Timer', state.showTime, 'toggle-time')}</div>
           </div>
         </main>
       </div>`
   }
 
-  function timerTable (hour, min, sec) {
+  function timerTable (ms, state) {
+    let [hour, min, sec] = state.toTimeString(ms).split(':') // TODO: unhack
+
     let numFields = [hour, null, min, null, sec]
     let incButtons = ['inc-hour', null, 'inc-min', null, 'inc-sec']
     let decButtons = ['dec-hour', null, 'dec-min', null, 'dec-sec']
@@ -56,7 +57,7 @@ module.exports = function (element, dispatch) {
     // TODO: input type=number has build-in increament buttons! style and use them instead?
     // TODO: make editable
     if (value == null) return ':' // td hack
-    return yo`<input class="mdl-textfield__input" type="number" min="0" max="60" value="${zero2(value)}" readonly="readonly">`
+    return yo`<input class="mdl-textfield__input" type="number" min="0" max="60" value="${value}" readonly="readonly">`
   }
 
   function option (name, checked, action) {
