@@ -4,6 +4,7 @@
 * make app icon
 * reduce icon gen overhead / get rid of static icons
 * package and release
+* persist state/settings
 
 * hhmmss module fixes
   - floors time instead of ceil (this makes it look like a 0 is reached before 1 second has passed?)

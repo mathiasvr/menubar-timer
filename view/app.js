@@ -8,12 +8,26 @@ const renderer = require('./renderer')
 const drawIcon = PieIcon(document.createElement('canvas'), 36)
 const update = renderer(document.body, dispatch)
 
-// TODO: persist?
 let state = {
-  showTime: false,
-  duration: 601, // start duration in seconds.
+  showTime: false,  // show time in menubar
+  duration: 60,     // start duration in seconds.
   timer: new Timer({ interval: 500 }) // TODO: adjust to duration / limit icon gen
 }
+
+state.timer.on('tick', (ms) => {
+  let percent = 1 - ms / (state.timer.duration)
+  setIconTime(ms)
+  drawIcon(percent, (err, buffer) => ipcRenderer.send('set-icon', buffer))
+  update(state)
+})
+
+state.timer.on('done', () => {
+  dispatch('stop')
+  showNotification()
+})
+
+// init view
+update(state)
 
 function dispatch (action) {
   // console.log('action', action)
@@ -52,20 +66,6 @@ function dispatch (action) {
 
   update(state)
 }
-
-state.timer.on('tick', (ms) => {
-  let percent = 1 - ms / (state.timer.duration)
-  setIconTime(ms)
-  drawIcon(percent, (err, buffer) => ipcRenderer.send('set-icon', buffer))
-  update(state)
-})
-
-state.timer.on('done', () => {
-  dispatch('stop')
-  showNotification()
-})
-
-update(state) // TODO: NEC?
 
 function setIconTime (ms) {
   let timeString = hhmmss(ms / 1000)
