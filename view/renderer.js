@@ -12,16 +12,16 @@ module.exports = function (element, dispatch) {
   }
 
   function layout (state) {
-    let playIcon = state.timer === 'running' ? 'pause' : 'play_arrow'
+    let playIcon = state.timer.status === 'running' ? 'pause' : 'play_arrow'
     return yo`
       <div class="mdl-layout is-upgraded">
         <main class="mdl-layout__content mdl-typography--font-light">
           <div class="mdl-grid">
             <div class="mdl-cell">
-              ${button('raised', playIcon, 'play-pause', state.timer !== 'stopped')}
+              ${button('raised', playIcon, 'play-pause', state.timer.status !== 'stopped')}
               ${button('raised', 'stop', 'stop')}
             </div>
-            <div class="mdl-cell">${timerTable(state.timer === 'stopped' ? state.duration * 1000 : state.ms, state)}</div>
+            <div class="mdl-cell">${timerTable(state.timer.status === 'stopped' ? state.duration * 1000 : state.timer.time, state)}</div>
             <div class="mdl-cell">${option('Show Timer', state.showTime, 'toggle-time')}</div>
           </div>
         </main>
@@ -38,9 +38,9 @@ module.exports = function (element, dispatch) {
     return yo`
       <table class="mdl-data-table mdl-shadow--2dp">
         <tbody>
-          <tr>${incButtons.map((action) => yo`<td>${button('icon', 'keyboard_arrow_up', action, false, state.timer !== 'stopped')}</td>`)}</tr>
+          <tr>${incButtons.map((action) => yo`<td>${button('icon', 'keyboard_arrow_up', action, false, state.timer.status !== 'stopped')}</td>`)}</tr>
           <tr>${numFields.map((val) => yo`<td>${numberfield(val)}</td>`)}</tr>
-          <tr>${decButtons.map((action) => yo`<td>${button('icon', 'keyboard_arrow_down', action, false, state.timer !== 'stopped')}</td>`)}</tr>
+          <tr>${decButtons.map((action) => yo`<td>${button('icon', 'keyboard_arrow_down', action, false, state.timer.status !== 'stopped')}</td>`)}</tr>
         </tbody>
       </table>`
   }
