@@ -1,5 +1,6 @@
 const {ipcRenderer} = require('electron')
 const Tock = require('tocktimer') // TODO: replace
+const Timer = require('../timer') // TODO: replace
 
 const PieIcon = require('../lib/pie-icon')
 const renderer = require('./renderer')
@@ -7,38 +8,39 @@ const renderer = require('./renderer')
 const drawIcon = PieIcon(document.createElement('canvas'), 36)
 const update = renderer(document.body, dispatch)
 
+const tock = Tock() // TODO: remove
+const msToTimecode = tock.msToTimecode.bind(tock) //todo
+
 // TODO: persist?
 let state = {
-  timer: 'stopped', // 'running', 'paused'
   showTime: false,
   duration: 601, // start duration in seconds.
   runningDuration: null, // TODO
-  toTimeString: (ms) => timer.msToTimecode(ms), // TODO: hack
-  ms: 0 // current ms
+  toTimeString: (ms) => msToTimecode(ms), // TODO: hack
+  get ms () { return timer.time },  // current ms
+  get timer () { return timer.state}, // todo
 }
 
 function dispatch (action) {
   // console.log('action', action)
-
   if (action === 'play-pause') { // TODO: split?
     if (state.timer === 'stopped') {
       state.runningDuration = state.duration
       timer.start(state.duration * 1000)
+    } else if (timer.state === 'paused') {
+      timer.resume()
     } else {
-      timer.pause() // pause / resume
+      timer.pause()
     }
-    state.timer = state.timer === 'running' ? 'paused' : 'running'
+    //state.timer = state.timer === 'running' ? 'paused' : 'running'
   } else if (action === 'stop') {
-    state.timer = 'stopped'
+    //state.timer = 'stopped'
     timer.stop()
-    // TODO: handle in onTimerUpdate
-    drawIcon(0, (err, buffer) => ipcRenderer.send('set-icon', buffer))
-    if (state.showTime) ipcRenderer.send('set-title', '00:00:00')
-    ipcRenderer.send('set-tooltip', null)
+    setIconTime(timer.time)
   } else if (action === 'toggle-time') {
     state.showTime = !state.showTime
     ipcRenderer.send('set-title', '')
-    onTimerUpdate() // TODO: handle properly
+    setIconTime(timer.time)
   } else if (action === 'inc-hour') {
     // TODO: fewer dispatch actions
     // TODO: only adjust hours not min/sec?
@@ -53,8 +55,6 @@ function dispatch (action) {
     state.duration -= 60
   } else if (action === 'dec-sec') {
     state.duration -= 1
-  } else if (action === 'update-time') {
-    state.ms = timer.lap()
   }
 
   if (state.duration < 0) state.duration = 0
@@ -62,30 +62,28 @@ function dispatch (action) {
   update(state)
 }
 
-let timer = Tock({
-  countdown: true,
-  interval: 500, // TODO: adjust to duration / limit icon gen
-  callback: onTimerUpdate,
-  complete: onTimerEnd
+let timer = new Timer({
+  interval: 500 // TODO: adjust to duration / limit icon gen
 })
 
-update(state)
-
-function onTimerUpdate () {
-  // state.ms = timer.lap()
-  dispatch('update-time')
-  let percent = 1 - state.ms / (state.runningDuration * 1000)
-  let timeString = timer.msToTimecode(state.ms)
-
-  if (state.showTime) ipcRenderer.send('set-title', timeString)
-  ipcRenderer.send('set-tooltip', timeString)
-
+timer.on('tick', (ms) => {
+  let percent = 1 - ms / (state.runningDuration * 1000)
+  setIconTime(ms)
   drawIcon(percent, (err, buffer) => ipcRenderer.send('set-icon', buffer))
-}
+  update(state)
+})
 
-function onTimerEnd () {
+timer.on('done', () => {
   dispatch('stop')
   showNotification()
+})
+
+update(state) // TODO: NEC?
+
+function setIconTime (ms) {
+  let timeString = msToTimecode(ms)
+  if (state.showTime) ipcRenderer.send('set-title', timeString)
+  ipcRenderer.send('set-tooltip', ms > 0 ? timeString : null)
 }
 
 function showNotification () {
