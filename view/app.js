@@ -1,7 +1,7 @@
 const {ipcRenderer} = require('electron')
+const Timer = require('tiny-timer')
 const hhmmss = require('hhmmss')
 
-const Timer = require('../timer')
 const PieIcon = require('../lib/pie-icon')
 const renderer = require('./renderer')
 
@@ -15,16 +15,12 @@ let state = {
 }
 
 state.timer.on('tick', (ms) => {
-  let percent = 1 - ms / (state.timer.duration)
   setIconTime(ms)
-  drawIcon(percent, (err, buffer) => ipcRenderer.send('set-icon', buffer))
+  setIconPercent(1 - ms / (state.timer.duration))
   update(state)
 })
 
-state.timer.on('done', () => {
-  dispatch('stop')
-  showNotification()
-})
+state.timer.on('done', () => showNotification())
 
 // init view
 update(state)
@@ -42,6 +38,7 @@ function dispatch (action) {
   } else if (action === 'stop') {
     state.timer.stop()
     setIconTime(state.timer.time)
+    setIconPercent(0)
   } else if (action === 'toggle-time') {
     state.showTime = !state.showTime
     ipcRenderer.send('set-title', '')
@@ -71,6 +68,10 @@ function setIconTime (ms) {
   let timeString = hhmmss(ms / 1000)
   if (state.showTime) ipcRenderer.send('set-title', timeString)
   ipcRenderer.send('set-tooltip', ms > 0 ? timeString : null)
+}
+
+function setIconPercent (percent) {
+  drawIcon(percent, (err, buffer) => ipcRenderer.send('set-icon', buffer))
 }
 
 function showNotification () {

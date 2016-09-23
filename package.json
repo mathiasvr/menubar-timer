@@ -29,6 +29,7 @@
     "blob-to-buffer": "^1.2.6",
     "hhmmss": "^1.0.0",
     "menubar": "^5.1.0",
+    "tiny-timer": "^1.0.1",
     "yo-yo": "^1.2.2"
   },
   "devDependencies": {
