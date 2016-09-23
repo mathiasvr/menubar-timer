@@ -26,8 +26,8 @@
   "homepage": "https://github.com/mathiasvr/countdown-timer#readme",
   "dependencies": {
     "blob-to-buffer": "^1.2.6",
-    "menubar": "^5.1.0",
-    "tocktimer": "^1.0.10"
+    "hhmmss": "^1.0.0",
+    "menubar": "^5.1.0"
   },
   "devDependencies": {
     "electron": "1.3.5",

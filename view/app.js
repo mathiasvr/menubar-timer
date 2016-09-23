@@ -1,22 +1,17 @@
 const {ipcRenderer} = require('electron')
-const Tock = require('tocktimer') // TODO: replace
-const Timer = require('../timer') // TODO: replace
+const hhmmss = require('hhmmss')
 
+const Timer = require('../timer')
 const PieIcon = require('../lib/pie-icon')
 const renderer = require('./renderer')
 
 const drawIcon = PieIcon(document.createElement('canvas'), 36)
 const update = renderer(document.body, dispatch)
 
-const tock = Tock() // TODO: remove
-const msToTimecode = tock.msToTimecode.bind(tock) //todo
-
 // TODO: persist?
 let state = {
   showTime: false,
   duration: 601, // start duration in seconds.
-  runningDuration: null, // TODO
-  toTimeString: (ms) => msToTimecode(ms), // TODO: hack
   timer: new Timer({ interval: 500 }) // TODO: adjust to duration / limit icon gen
 }
 
@@ -24,16 +19,13 @@ function dispatch (action) {
   // console.log('action', action)
   if (action === 'play-pause') { // TODO: split?
     if (state.timer.status === 'stopped') {
-      state.runningDuration = state.duration
       state.timer.start(state.duration * 1000)
     } else if (state.timer.status === 'paused') {
       state.timer.resume()
     } else {
       state.timer.pause()
     }
-    //state.timer = state.timer === 'running' ? 'paused' : 'running'
   } else if (action === 'stop') {
-    //state.timer = 'stopped'
     state.timer.stop()
     setIconTime(state.timer.time)
   } else if (action === 'toggle-time') {
@@ -62,7 +54,7 @@ function dispatch (action) {
 }
 
 state.timer.on('tick', (ms) => {
-  let percent = 1 - ms / (state.runningDuration * 1000)
+  let percent = 1 - ms / (state.timer.duration)
   setIconTime(ms)
   drawIcon(percent, (err, buffer) => ipcRenderer.send('set-icon', buffer))
   update(state)
@@ -76,7 +68,7 @@ state.timer.on('done', () => {
 update(state) // TODO: NEC?
 
 function setIconTime (ms) {
-  let timeString = msToTimecode(ms)
+  let timeString = hhmmss(ms / 1000)
   if (state.showTime) ipcRenderer.send('set-title', timeString)
   ipcRenderer.send('set-tooltip', ms > 0 ? timeString : null)
 }

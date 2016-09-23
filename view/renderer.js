@@ -1,4 +1,5 @@
 const yo = require('yo-yo')
+const hhmmss = require('hhmmss')
 // TODO: mdl does not work well with morphdom, replace it.
 
 module.exports = function (element, dispatch) {
@@ -13,6 +14,7 @@ module.exports = function (element, dispatch) {
 
   function layout (state) {
     let playIcon = state.timer.status === 'running' ? 'pause' : 'play_arrow'
+    let secs = state.timer.status === 'stopped' ? state.duration : state.timer.time / 1000
     return yo`
       <div class="mdl-layout is-upgraded">
         <main class="mdl-layout__content mdl-typography--font-light">
@@ -21,26 +23,28 @@ module.exports = function (element, dispatch) {
               ${button('raised', playIcon, 'play-pause', state.timer.status !== 'stopped')}
               ${button('raised', 'stop', 'stop')}
             </div>
-            <div class="mdl-cell">${timerTable(state.timer.status === 'stopped' ? state.duration * 1000 : state.timer.time, state)}</div>
+            <div class="mdl-cell">${timerTable(secs, state)}</div>
             <div class="mdl-cell">${option('Show Timer', state.showTime, 'toggle-time')}</div>
           </div>
         </main>
       </div>`
   }
 
-  function timerTable (ms, state) {
-    let [hour, min, sec] = state.toTimeString(ms).split(':') // TODO: unhack
+  function timerTable (s, state) {
+    let [sec, min, hour] = hhmmss(s).split(':').reverse()
 
-    let numFields = [hour, null, min, null, sec]
+    let numFields = [hour || 0, null, min, null, sec]
     let incButtons = ['inc-hour', null, 'inc-min', null, 'inc-sec']
     let decButtons = ['dec-hour', null, 'dec-min', null, 'dec-sec']
+
+    let disable = state.timer.status !== 'stopped'
 
     return yo`
       <table class="mdl-data-table mdl-shadow--2dp">
         <tbody>
-          <tr>${incButtons.map((action) => yo`<td>${button('icon', 'keyboard_arrow_up', action, false, state.timer.status !== 'stopped')}</td>`)}</tr>
+          <tr>${incButtons.map((action) => yo`<td>${button('icon', 'keyboard_arrow_up', action, false, disable)}</td>`)}</tr>
           <tr>${numFields.map((val) => yo`<td>${numberfield(val)}</td>`)}</tr>
-          <tr>${decButtons.map((action) => yo`<td>${button('icon', 'keyboard_arrow_down', action, false, state.timer.status !== 'stopped')}</td>`)}</tr>
+          <tr>${decButtons.map((action) => yo`<td>${button('icon', 'keyboard_arrow_down', action, false, disable)}</td>`)}</tr>
         </tbody>
       </table>`
   }

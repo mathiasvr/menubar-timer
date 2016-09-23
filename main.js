@@ -40,7 +40,7 @@ mb.on('ready', () => {
     // { label: 'Show Window', click: () => mb.showWindow() },
     // { type: 'separator' },
     // { label: 'About', role: 'about' },
-    { label: 'Debug', click: () => mb.window.openDevTools({ mode: 'undocked' }) /*, accelerator: 'Alt+Command+I'*/},
+    { label: 'Debug', click: () => mb.window.openDevTools({ mode: 'undocked' }) /*, accelerator: 'Alt+Command+I' */},
     { label: 'Quit', role: 'quit' }
   ])
 

@@ -62,8 +62,8 @@ class Timer extends EventEmitter {
 
   get duration () {
     return this._duration
-  } 
-  
+  }
+
   get status () {
     return this._status
   }
