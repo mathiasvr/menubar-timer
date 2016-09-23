@@ -1,17 +1,18 @@
 {
-  "name": "countdown-timer",
+  "name": "menubar-timer",
   "version": "0.0.0",
-  "description": "Countdown Timer Electron App",
+  "description": "Menubar Countdown Timer App",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-packager . \"Countdown Timer\" --platform=darwin --arch=x64 --icon=Icon.icns --out=build --tmpdir=false",
+    "build": "electron-packager . \"Menubar Timer\" --platform=darwin --arch=x64 --icon=Icon.icns --out=build --tmpdir=false",
     "test": "standard"
   },
   "keywords": [
     "timer",
     "countdown",
     "stopwatch",
+    "menubar",
     "electron"
   ],
   "author": "Mathias Rasmussen <mathiasvr@gmail.com>",
@@ -27,10 +28,11 @@
   "dependencies": {
     "blob-to-buffer": "^1.2.6",
     "hhmmss": "^1.0.0",
-    "menubar": "^5.1.0"
+    "menubar": "^5.1.0",
+    "yo-yo": "^1.2.2"
   },
   "devDependencies": {
-    "electron": "1.3.5",
+    "electron": "1.4.1",
     "electron-packager": "^8.0.0"
   }
 }
