@@ -1,11 +1,11 @@
-const {ipcRenderer} = require('electron')
+const {ipcRenderer, remote} = require('electron')
 const Timer = require('tiny-timer')
 const hhmmss = require('hhmmss')
 
 const PieIcon = require('../lib/pie-icon')
 const renderer = require('./renderer')
 
-const drawIcon = PieIcon(document.createElement('canvas'), 36)
+const drawIcon = PieIcon(document.createElement('canvas'), 36) // todo: scale:1
 const update = renderer(document.body, dispatch)
 
 let state = {
@@ -73,7 +73,7 @@ function setIconPercent (percent) {
 }
 
 function showNotification () {
-  return new window.Notification('Countdown Timer', {
+  return new window.Notification(remote.app.getName(), {
     body: 'The timer has run out!'
   })
 }
