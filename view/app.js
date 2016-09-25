@@ -26,7 +26,6 @@ state.timer.on('done', () => showNotification())
 update(state)
 
 function dispatch (action) {
-  // console.log('action', action)
   if (action === 'play-pause') { // TODO: split?
     if (state.timer.status === 'stopped') {
       state.timer.start(state.duration * 1000)
@@ -44,14 +43,13 @@ function dispatch (action) {
     ipcRenderer.send('set-title', '')
     setIconTime(state.timer.time)
   } else if (action === 'inc-hour') {
-    // TODO: fewer dispatch actions
-    // TODO: only adjust hours not min/sec?
     state.duration += 3600
   } else if (action === 'inc-min') {
     state.duration += 60
   } else if (action === 'inc-sec') {
     state.duration += 1
   } else if (action === 'dec-hour') {
+    // TODO: only adjust hours, not min/sec
     state.duration -= 3600
   } else if (action === 'dec-min') {
     state.duration -= 60
@@ -65,7 +63,7 @@ function dispatch (action) {
 }
 
 function setIconTime (ms) {
-  let timeString = hhmmss(ms / 1000)
+  let timeString = hhmmss(Math.ceil(ms / 1000))
   if (state.showTime) ipcRenderer.send('set-title', timeString)
   ipcRenderer.send('set-tooltip', ms > 0 ? timeString : null)
 }

@@ -14,7 +14,9 @@ module.exports = function (element, dispatch) {
 
   function layout (state) {
     let playIcon = state.timer.status === 'running' ? 'pause' : 'play_arrow'
-    let secs = state.timer.status === 'stopped' ? state.duration : state.timer.time / 1000
+    let secs = state.timer.status !== 'stopped'
+      ? Math.ceil(state.timer.time / 1000)
+      : state.duration
     return yo`
       <div class="mdl-layout is-upgraded">
         <main class="mdl-layout__content mdl-typography--font-light">
@@ -32,8 +34,9 @@ module.exports = function (element, dispatch) {
 
   function timerTable (s, state) {
     let [sec, min, hour] = hhmmss(s).split(':').reverse()
+    hour = ('0' + (hour || 0)).slice(-2)
 
-    let numFields = [hour || 0, null, min, null, sec]
+    let numFields = [hour, null, min, null, sec]
     let incButtons = ['inc-hour', null, 'inc-min', null, 'inc-sec']
     let decButtons = ['dec-hour', null, 'dec-min', null, 'dec-sec']
 
