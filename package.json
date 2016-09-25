@@ -1,11 +1,13 @@
 {
   "name": "menubar-timer",
+  "productName": "Menubar Timer",
   "version": "0.0.0",
   "description": "Menubar Countdown Timer App",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-packager . \"Menubar Timer\" --platform=darwin --arch=x64 --icon=Icon.icns --out=build --tmpdir=false",
+    "build": "electron-packager . --extra-resource=Credits.rtf --icon=icons/Icon.icns --platform=darwin --arch=x64 --out=build --tmpdir=false",
+    "makeicon": "iconutil --convert icns icons/Icon.iconset",
     "test": "standard"
   },
   "keywords": [
