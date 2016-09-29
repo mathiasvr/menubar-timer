@@ -49,7 +49,6 @@ function dispatch (action) {
   } else if (action === 'inc-sec') {
     state.duration += 1
   } else if (action === 'dec-hour') {
-    // TODO: only adjust hours, not min/sec
     state.duration -= 3600
   } else if (action === 'dec-min') {
     state.duration -= 60
@@ -69,7 +68,7 @@ function setIconTime (ms) {
 }
 
 function setIconPercent (percent) {
-  drawIcon(percent, (err, buffer) => ipcRenderer.send('set-icon', buffer))
+  drawIcon(percent, (err, buffer) => err ? console.error(err) : ipcRenderer.send('set-icon', buffer))
 }
 
 function showNotification () {

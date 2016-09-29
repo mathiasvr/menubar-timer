@@ -14,16 +14,15 @@ module.exports = function (element, dispatch) {
   }
 
   function layout (state) {
+    let notStopped = state.timer.status !== 'stopped'
     let playIcon = state.timer.status === 'running' ? 'pause' : 'play_arrow'
-    let secs = state.timer.status !== 'stopped'
-      ? Math.ceil(state.timer.time / 1000)
-      : state.duration
+    let secs = notStopped ? Math.ceil(state.timer.time / 1000) : state.duration
     return yo`
       <div class="mdl-layout is-upgraded">
         <main class="mdl-layout__content mdl-typography--font-light">
           <div class="mdl-grid">
             <div class="mdl-cell">
-              ${button('raised', playIcon, 'play-pause', state.timer.status !== 'stopped')}
+              ${button('raised', playIcon, 'play-pause', notStopped)}
               ${button('raised', 'stop', 'stop')}
             </div>
             <div class="mdl-cell">${timerTable(secs, state)}</div>
@@ -67,13 +66,12 @@ module.exports = function (element, dispatch) {
             downAction = setInterval(() => dispatch(action), 100)
           }, 500)
         }
+        // TODO: detect drag / lost focus
         mouseup = () => clearInterval(downAction)
       } else {
         click = () => dispatch(action)
       }
     }
-    // console.log('da', downAction)
-    // if(downAction) dispatch(action)
     return yo`
       <button class="mdl-button mdl-js-button mdl-button--${type} ${color ? 'mdl-button--colored' : ''}"
               onclick=${click} onmousedown=${mousedown} onmouseup=${mouseup} }>

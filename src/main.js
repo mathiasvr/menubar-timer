@@ -22,7 +22,7 @@ mb.on('ready', () => {
 
   const contextMenu = Menu.buildFromTemplate([
     { role: 'about' },
-    { label: 'Developer Tools', click: () => mb.window.openDevTools({ mode: 'detach' }) /*, accelerator: 'Alt+Command+I' */},
+    { label: 'Developer Tools', click: () => mb.window.openDevTools({ mode: 'detach' }) }, // accelerator: 'Alt+Command+I'
     { type: 'separator' },
     { role: 'quit' }
   ])
