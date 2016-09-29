@@ -4,6 +4,7 @@ const hhmmss = require('hhmmss')
 
 module.exports = function (element, dispatch) {
   let tree = null
+  let downAction = null
 
   return function update (state) {
     let newTree = layout(state)
@@ -55,9 +56,27 @@ module.exports = function (element, dispatch) {
   function button (type, icon, action, color, disable) {
     if (action == null) return null // td hack
     // TODO: proper disable
+    let click, mousedown, mouseup
+    if (!disable) {
+      // hold down timer action
+      if (action.startsWith('inc') || action.startsWith('dec')) {
+        mousedown = () => {
+          if (downAction) clearInterval(downAction)
+          dispatch(action)
+          downAction = setTimeout(() => {
+            downAction = setInterval(() => dispatch(action), 100)
+          }, 500)
+        }
+        mouseup = () => clearInterval(downAction)
+      } else {
+        click = () => dispatch(action)
+      }
+    }
+    // console.log('da', downAction)
+    // if(downAction) dispatch(action)
     return yo`
       <button class="mdl-button mdl-js-button mdl-button--${type} ${color ? 'mdl-button--colored' : ''}"
-              onclick=${disable ? null : () => dispatch(action)}>
+              onclick=${click} onmousedown=${mousedown} onmouseup=${mouseup} }>
         <i class="material-icons">${icon}</i>
       </button>`
   }

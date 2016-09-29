@@ -3,11 +3,11 @@
   "productName": "Menubar Timer",
   "version": "0.0.0",
   "description": "Menubar Countdown Timer App",
-  "main": "main.js",
+  "main": "src/main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-packager . --extra-resource=Credits.rtf --icon=icons/Icon.icns --platform=darwin --arch=x64 --out=build --tmpdir=false",
-    "makeicon": "iconutil --convert icns icons/Icon.iconset",
+    "build": "electron-packager . --extra-resource=static/Credits.rtf --icon=static/Icon.icns --platform=darwin --arch=x64 --out=build --tmpdir=false",
+    "makeicon": "iconutil --convert icns static/Icon.iconset",
     "test": "standard"
   },
   "keywords": [

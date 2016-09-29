@@ -5,7 +5,7 @@ const {ipcMain, nativeImage, Menu} = electron
 
 const mb = menubar({
   dir: path.join(__dirname, 'view'),
-  icon: path.join(__dirname, 'icons/IconTemplate.png'), // TODO: gen, menubar does not support nativeImage
+  icon: path.join(__dirname, 'IconTemplate.png'), // TODO: gen, menubar does not support nativeImage
   width: 164,
   height: 270,
   resizable: false,
@@ -15,14 +15,14 @@ const mb = menubar({
 })
 
 mb.on('ready', () => {
-  const NAME_VERSION = mb.app.getName() + ' ' + require('./package').version
+  const NAME_VERSION = mb.app.getName() + ' ' + require('../package').version
   const SCALE_FACTOR = electron.screen.getPrimaryDisplay().scaleFactor
 
   mb.tray.setToolTip(NAME_VERSION)
 
   const contextMenu = Menu.buildFromTemplate([
     { role: 'about' },
-    { label: 'Debug', click: () => mb.window.openDevTools({ mode: 'undocked' }) /*, accelerator: 'Alt+Command+I' */},
+    { label: 'Developer Tools', click: () => mb.window.openDevTools({ mode: 'detach' }) /*, accelerator: 'Alt+Command+I' */},
     { type: 'separator' },
     { role: 'quit' }
   ])
