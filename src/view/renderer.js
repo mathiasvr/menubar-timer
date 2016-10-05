@@ -1,6 +1,6 @@
 const yo = require('yo-yo')
 const hhmmss = require('hhmmss')
-// TODO: mdl does not work well with morphdom, replace it.
+// TODO: mdl does not work well with morphdom, replace it?
 
 module.exports = function (element, dispatch) {
   let tree = null
@@ -54,27 +54,24 @@ module.exports = function (element, dispatch) {
 
   function button (type, icon, action, color, disable) {
     if (action == null) return null // td hack
-    // TODO: proper disable
     let click, mousedown, mouseup
-    if (!disable) {
-      // hold down timer action
-      if (action.startsWith('inc') || action.startsWith('dec')) {
-        mousedown = () => {
-          if (downAction) clearInterval(downAction)
-          dispatch(action)
-          downAction = setTimeout(() => {
-            downAction = setInterval(() => dispatch(action), 100)
-          }, 500)
-        }
-        // TODO: detect drag / lost focus
-        mouseup = () => clearInterval(downAction)
-      } else {
-        click = () => dispatch(action)
+    // hold down timer action
+    if (action.startsWith('inc') || action.startsWith('dec')) {
+      mousedown = () => {
+        if (downAction) clearInterval(downAction)
+        dispatch(action)
+        downAction = setTimeout(() => {
+          downAction = setInterval(() => dispatch(action), 100)
+        }, 500)
       }
+      mouseup = () => clearInterval(downAction)
+    } else {
+      click = () => dispatch(action)
     }
     return yo`
       <button class="mdl-button mdl-js-button mdl-button--${type} ${color ? 'mdl-button--colored' : ''}"
-              onclick=${click} onmousedown=${mousedown} onmouseup=${mouseup} }>
+              onclick=${click} onmousedown=${mousedown} onmouseup=${mouseup} onmouseout=${mouseup}
+              ${disable ? 'disabled' : ''}>
         <i class="material-icons">${icon}</i>
       </button>`
   }

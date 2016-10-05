@@ -5,6 +5,7 @@ const hhmmss = require('hhmmss')
 const PieIcon = require('../lib/pie-icon')
 const renderer = require('./renderer')
 
+const menuWindow = remote.getCurrentWindow()
 const drawIcon = PieIcon(document.createElement('canvas'), 36) // todo: scale:1
 const update = renderer(document.body, dispatch)
 
@@ -17,7 +18,7 @@ let state = {
 state.timer.on('tick', (ms) => {
   setIconTime(ms)
   setIconPercent(1 - ms / (state.timer.duration))
-  update(state)
+  if (menuWindow.isVisible()) update(state)
 })
 
 state.timer.on('done', () => showNotification())
@@ -26,7 +27,7 @@ state.timer.on('done', () => showNotification())
 update(state)
 
 function dispatch (action) {
-  if (action === 'play-pause') { // TODO: split?
+  if (action === 'play-pause') {
     if (state.timer.status === 'stopped') {
       state.timer.start(state.duration * 1000)
     } else if (state.timer.status === 'paused') {
