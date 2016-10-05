@@ -7,6 +7,8 @@
 
 Menubar Timer App built with Electron.
 
+![screenshot](screenshot.png)
+
 ## license
 
 MIT
