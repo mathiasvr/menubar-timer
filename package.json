@@ -21,12 +21,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mathiasvr/countdown-timer.git"
+    "url": "git+https://github.com/mathiasvr/menubar-timer.git"
   },
   "bugs": {
-    "url": "https://github.com/mathiasvr/countdown-timer/issues"
+    "url": "https://github.com/mathiasvr/menubar-timer/issues"
   },
-  "homepage": "https://github.com/mathiasvr/countdown-timer#readme",
+  "homepage": "https://github.com/mathiasvr/menubar-timer#readme",
   "dependencies": {
     "blob-to-buffer": "^1.2.6",
     "hhmmss": "^1.0.0",
