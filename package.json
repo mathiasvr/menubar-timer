@@ -6,8 +6,8 @@
   "main": "src/main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-packager . --extra-resource=static/Credits.rtf --icon=static/Icon.icns --platform=darwin --arch=x64 --out=build --tmpdir=false",
-    "makeicon": "iconutil --convert icns static/Icon.iconset",
+    "build": "electron-packager . --extra-resource=resources/Credits.rtf --icon=resources/Icon.icns --platform=darwin --arch=x64 --out=build --tmpdir=false --ignore resources",
+    "makeicon": "iconutil --convert icns resources/Icon.iconset",
     "test": "standard"
   },
   "keywords": [
@@ -35,7 +35,7 @@
     "yo-yo": "^1.3.0"
   },
   "devDependencies": {
-    "electron": "1.4.2",
+    "electron": "1.4.3",
     "electron-packager": "^8.1.0"
   }
 }
