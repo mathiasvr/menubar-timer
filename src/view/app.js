@@ -14,7 +14,7 @@ const update = renderer(document.body, dispatch)
 let state = {
   showTime: false,  // show time in menubar
   duration: 60,     // start duration in seconds.
-  timer: new Timer({ interval: 500 }) // TODO: adjust to duration / limit icon gen
+  timer: new Timer()
 }
 
 state.timer.on('tick', (ms) => {
@@ -25,13 +25,15 @@ state.timer.on('tick', (ms) => {
 
 state.timer.on('done', () => showNotification())
 
-// init view
-update(state)
+menuWindow.on('show', () => update(state))
 
 function dispatch (action) {
   if (action === 'play-pause') {
     if (state.timer.status === 'stopped') {
-      state.timer.start(state.duration * 1000)
+      // dynamic interval: always fire around 60 ticks
+      let interval = state.duration * 15
+      let duration = state.duration * 1000
+      state.timer.start(duration, interval)
     } else if (state.timer.status === 'paused') {
       state.timer.resume()
     } else {
