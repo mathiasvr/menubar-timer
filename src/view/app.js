@@ -1,4 +1,4 @@
-const {ipcRenderer, remote} = require('electron')
+const {ipcRenderer, remote, screen} = require('electron')
 const Timer = require('tiny-timer')
 const hhmmss = require('hhmmss')
 
@@ -6,7 +6,9 @@ const PieIcon = require('../lib/pie-icon')
 const renderer = require('./renderer')
 
 const menuWindow = remote.getCurrentWindow()
-const drawIcon = PieIcon(document.createElement('canvas'), 36) // todo: scale:1
+const scaleFactor = screen.getPrimaryDisplay().scaleFactor
+
+const drawIcon = PieIcon(document.createElement('canvas'), scaleFactor * 18)
 const update = renderer(document.body, dispatch)
 
 let state = {

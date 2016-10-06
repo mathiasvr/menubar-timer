@@ -5,11 +5,12 @@ const {ipcMain, nativeImage, Menu} = electron
 
 const mb = menubar({
   dir: path.join(__dirname, 'view'),
-  icon: path.join(__dirname, 'IconTemplate.png'), // TODO: gen, menubar does not support nativeImage
+  // TODO: generate, menubar does not support nativeImage
+  icon: path.join(__dirname, 'IconTemplate.png'),
   width: 164,
   height: 270,
   resizable: false,
-  // TODO: maybe move timer to main process, so this is not needed.
+  // TODO: maybe move timer to main process to avoid this.
   preloadWindow: true,
   webPreferences: { backgroundThrottling: false }
 })
@@ -22,7 +23,8 @@ mb.on('ready', () => {
 
   const contextMenu = Menu.buildFromTemplate([
     { role: 'about' },
-    { label: 'Developer Tools', click: () => mb.window.openDevTools({ mode: 'detach' }) }, // accelerator: 'Alt+Command+I'
+    // TODO: remove after v1.0
+    { label: 'Developer Tools', click: () => mb.window.openDevTools({ mode: 'detach' }) },
     { type: 'separator' },
     { role: 'quit' }
   ])
@@ -34,6 +36,7 @@ mb.on('ready', () => {
   ipcMain.on('set-tooltip', (_, tooltip) => mb.tray.setToolTip(tooltip || NAME_VERSION))
 
   ipcMain.on('set-icon', (_, buffer) => {
+    // TODO: maybe just use data-url when scaling is supported
     // let pngData = nativeImage.createFromDataURL(data).toPng()
     // let img = nativeImage.createFromBuffer(pngData, scaleFactor)
     let img = nativeImage.createFromBuffer(buffer, SCALE_FACTOR)
