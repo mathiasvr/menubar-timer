@@ -5,7 +5,7 @@
 [lic-img]: http://img.shields.io/:license-MIT-blue.svg
 [lic-url]: http://mvr.mit-license.org
 
-Menubar Timer App built with Electron.
+Countdown timer menubar app for macOS built with Electron.
 
 ![screenshot](screenshot.png)
 

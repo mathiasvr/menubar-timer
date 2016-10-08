@@ -9,7 +9,7 @@ const menuWindow = remote.getCurrentWindow()
 const scaleFactor = screen.getPrimaryDisplay().scaleFactor
 
 const drawIcon = PieIcon(document.createElement('canvas'), scaleFactor * 18)
-const update = renderer(document.body, dispatch)
+const render = renderer(document.body, dispatch)
 
 let state = {
   showTime: false,  // show time in menubar
@@ -17,21 +17,25 @@ let state = {
   timer: new Timer()
 }
 
+let lastPercent = 0
+
 state.timer.on('tick', (ms) => {
   setIconTime(ms)
   setIconPercent(1 - ms / (state.timer.duration))
-  if (menuWindow.isVisible()) update(state)
+  if (menuWindow.isVisible()) render(state)
 })
 
 state.timer.on('done', () => showNotification())
 
-menuWindow.on('show', () => update(state))
+menuWindow.on('show', () => render(state))
+
+render(state) // init before mdl script loads
 
 function dispatch (action) {
   if (action === 'play-pause') {
     if (state.timer.status === 'stopped') {
-      // dynamic interval: always fire around 60 ticks
-      let interval = state.duration * 15
+      // faster refresh interval for short durations
+      let interval = state.duration > 50 ? 1000 : state.duration * 10
       let duration = state.duration * 1000
       state.timer.start(duration, interval)
     } else if (state.timer.status === 'paused') {
@@ -61,9 +65,10 @@ function dispatch (action) {
     state.duration -= 1
   }
 
+  // never set a negative duration
   if (state.duration < 0) state.duration = 0
 
-  update(state)
+  render(state)
 }
 
 function setIconTime (ms) {
@@ -73,7 +78,10 @@ function setIconTime (ms) {
 }
 
 function setIconPercent (percent) {
+  // limit icon drawing to whole percent (100 draws)
+  if (percent !== 0 && percent !== 1 && percent - lastPercent < 0.01) return
   drawIcon(percent, (err, buffer) => err ? console.error(err) : ipcRenderer.send('set-icon', buffer))
+  lastPercent = percent
 }
 
 function showNotification () {
