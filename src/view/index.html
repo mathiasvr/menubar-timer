@@ -10,6 +10,9 @@
       cursor: default !important;
     }
     /* mdl hacks */
+    .mdl-textfield__input {
+      border: none;
+    }
     .mdl-data-table td {
       padding: 0 1px;
     }
@@ -22,8 +25,11 @@
     .mdl-data-table td:last-of-type {
       padding-right: 9px;
     }    
-    .mdl-textfield__input {
-      border: none;
+    .mdl-data-table tr:nth-child(odd) {
+      background-color: #eee !important;
+    }
+    .mdl-data-table tr:nth-child(even) {
+      background-color: #fff !important;
     }
   </style>
   <script defer src="./mdl/material.min.js"></script>

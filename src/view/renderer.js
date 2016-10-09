@@ -77,11 +77,9 @@ module.exports = function (element, dispatch) {
   }
 
   function numberfield (value) {
-    // TODO: input type=number has build-in increament buttons! style and use them instead?
-    // TODO: make editable
+    // TODO: input type=number has build-in increament buttons, style and use them instead?
     if (value == null) return ':' // td hack
-    return yo`<input class="mdl-textfield__input" type="number" min="0" max="60"
-                     value="${value}" readonly="readonly">`
+    return yo`<input class="mdl-textfield__input" value="${value}" readonly>`
   }
 
   function option (name, checked, action) {
