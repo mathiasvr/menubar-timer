@@ -61,7 +61,7 @@ module.exports = function (element, dispatch) {
         if (downAction) clearInterval(downAction)
         dispatch(action)
         downAction = setTimeout(() => {
-          downAction = setInterval(() => dispatch(action), 100)
+          downAction = setInterval(() => dispatch(action), 80)
         }, 500)
       }
       mouseup = () => clearInterval(downAction)
